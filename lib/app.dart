@@ -1,6 +1,7 @@
 import 'package:faxina/bloc/provider.dart';
 import 'package:faxina/bloc/task.dart';
 import 'package:faxina/models/task.dart';
+import 'package:faxina/screens/taskForm.dart';
 import 'package:flutter/material.dart';
 
 class FaxinaApp extends StatelessWidget {
@@ -28,11 +29,11 @@ class FaxinaPage extends StatefulWidget {
 }
 
 class _FaxinaPageState extends State<FaxinaPage> {
-  final TaskBloc _bloc = new TaskBloc();
-  List<Task> _taskList;
   
   @override
   Widget build(BuildContext context) {
+    final TaskBloc _bloc = Provider.of(context).taskBloc;
+    List<Task> _taskList;
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
@@ -48,7 +49,15 @@ class _FaxinaPageState extends State<FaxinaPage> {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _bloc.addTask(new Task(name: 'teste'));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => new TaskForm(),
+            ),
+          );
+        },
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ),

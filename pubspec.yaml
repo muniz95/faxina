@@ -15,6 +15,7 @@ environment:
 dependencies:
   rxdart: ^0.18.1
   sqflite: '^0.12.1'
+  path_provider: any
   flutter:
     sdk: flutter
 

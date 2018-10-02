@@ -12,7 +12,7 @@ class Provider extends InheritedWidget {
     return true;
   }
 
-  static TaskBloc of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(Provider) as Provider).taskBloc;
+  static Provider of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(Provider) as Provider);
   }
 }

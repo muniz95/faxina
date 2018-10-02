@@ -12,6 +12,10 @@ class TaskBloc {
     
   }
 
+  addTask(Task task) {
+    _selectedTask.add(task);
+  }
+
   void dispose() {
     _taskList.close();
     _selectedTask.close();
