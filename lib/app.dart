@@ -33,20 +33,28 @@ class _FaxinaPageState extends State<FaxinaPage> {
   @override
   Widget build(BuildContext context) {
     final TaskBloc _bloc = Provider.of(context).taskBloc;
-    List<Task> _taskList;
+    // List<Task> _taskList;
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'Nenhuma tarefa adicionada.',
-            ),
-          ],
-        ),
+      body: StreamBuilder(
+        stream: _bloc.selectedTask,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            Task taskList = snapshot.data as Task;
+            return new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Text('Nenhuma tarefa adicionada.'),
+                  new Text(taskList.name),
+                ],
+              ),
+            );
+          }
+          return Text('Não há dados');
+        }
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
@@ -54,7 +62,7 @@ class _FaxinaPageState extends State<FaxinaPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => new TaskForm(),
+              builder: (BuildContext context) => TaskForm(),
             ),
           );
         },
