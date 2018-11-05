@@ -39,26 +39,25 @@ class _FaxinaPageState extends State<FaxinaPage> {
         title: new Text(widget.title),
       ),
       body: StreamBuilder(
-        stream: _bloc.selectedTask,
+        stream: _bloc.taskList,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            Task taskList = snapshot.data as Task;
+            List<Task> taskList = snapshot.data as List<Task>;
             return new Center(
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Text('Nenhuma tarefa adicionada.'),
-                  new Text(taskList.name),
+                  new Text('Total de tarefas: ${taskList.length.toString()}'),
                 ],
               ),
             );
+          } else {
+            return Text('Não há dados');
           }
-          return Text('Não há dados');
         }
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
-          _bloc.addTask(new Task(name: 'teste'));
           Navigator.push(
             context,
             MaterialPageRoute(

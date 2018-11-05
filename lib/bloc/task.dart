@@ -13,7 +13,9 @@ class TaskBloc {
   }
 
   addTask(Task task) {
-    _selectedTask.add(task);
+    List<Task> tasks =_taskList.value ?? new List<Task>();
+    tasks.add(task);
+    _taskList.add(tasks);
   }
 
   void dispose() {
