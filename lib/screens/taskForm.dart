@@ -44,20 +44,8 @@ class TaskFormState extends State<TaskForm> {
                   key: formKey,
                   child: new Column(
                     children: <Widget>[
-                      new Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: new TextFormField(
-                          onSaved: (val) {
-                            task.name = val;
-                          },
-                          validator: (val) {
-                            return val.length < 1
-                                ? "Name must have atleast 1 chars"
-                                : null;
-                          },
-                          decoration: new InputDecoration(labelText: "Nome"),
-                        ),
-                      ),
+                      _nameField(),
+                      _intervalField(),
                     ],
                   ),
                 ),
@@ -71,35 +59,46 @@ class TaskFormState extends State<TaskForm> {
     );
   }
 
-  void _submit() {
+  Padding _nameField() =>
+    new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new TextFormField(
+        onSaved: (val) {
+          task.name = val;
+        },
+        validator: (val) {
+          return val.length < 1
+              ? "Name must have atleast 1 chars"
+              : null;
+        },
+        decoration: new InputDecoration(labelText: "Nome"),
+      ),
+    );
+
+  Padding _intervalField() =>
+    new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new TextFormField(
+        keyboardType: TextInputType.number,
+        onSaved: (val) {
+          task.interval = int.parse(val);
+        },
+        validator: (val) {
+          return int.parse(val) < 1
+              ? "O intervalo deve ser de no mínimo 1 dia"
+              : null;
+        },
+        decoration: new InputDecoration(labelText: "Intervalo de tempo (em dias)"),
+      ),
+    );
+
+  void _submit() async {
     final form = formKey.currentState;
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
     if (form.validate()) {
       form.save();
-      _bloc.addTask(task);
-      // var store = StoreProvider.of<AppState>(context);
-      // Product product = new Product(
-      //   name: _name,
-      //   quantity: _quantity,
-      //   category: _category,
-      //   code: _code,
-      //   user: store.state.userState.user,
-      // );
-
-      // setState(() => _isLoading = false);
-      // var db = new DB();
-      // db.saveProduct(product)
-      // .then((res) {
-      //   store.dispatch(new AddProductToList(product));
-      //   _showSnackBar('Produto cadastrado com sucesso!');
-      //   new Future.delayed(new Duration(seconds: 3)).then((_) {
-      //     Navigator.of(_ctx).pop("/home");
-      //   });
-      // })
-      // .catchError((err) {
-      //   _showSnackBar('Error: $err');
-      // });
+      await _bloc.addTask(task);
     }
   }
 

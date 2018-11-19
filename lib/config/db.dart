@@ -1,3 +1,4 @@
+import 'package:faxina/models/task.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -31,92 +32,37 @@ class DB {
       CREATE TABLE Task(
         id INTEGER PRIMARY KEY,
         name TEXT,
-        due Date,
-        interval int,
-        done boolean
+        lastDone Date,
+        interval int
       )
     """);
     print("Created tables");
-    // seedTables();
   }
-  
-  // void seedTables() async {
-  //   User admin = new User(
-  //     name: 'Rodrigo Temiski Muniz',
-  //     email: 'admin@gameware.com',
-  //     username: 'admin',
-  //     password: '123',
-  //   );
-  //   Product product = new Product(
-  //     name: 'Playstation',
-  //     quantity: 5,
-  //     code: 'PS1',
-  //     category: ProductCategory.console,
-  //     user: admin,
-  //   );
 
-  //   await saveUser(admin);
-  //   await new Future.delayed(new Duration(seconds: 5));
-  //   await saveProduct(product);
-  // }
+  Future<int> saveTask(Task task) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("Task", task.toMap());
+    return res;
+  }
 
-  // Future<int> saveUser(User user) async {
-  //   var dbClient = await db;
-  //   int res = await dbClient.insert("User", user.toMap());
-  //   return res;
-  // }
+  Future<int> deleteTasks() async {
+    var dbClient = await db;
+    int res = await dbClient.delete("Task");
+    return res;
+  }
 
-  // Future<int> saveProduct(Product product) async {
-  //   var dbClient = await db;
-  //   int res = await dbClient.insert("Product", product.toMap());
-  //   return res;
-  // }
-
-  // Future<int> deleteUsers() async {
-  //   var dbClient = await db;
-  //   int res = await dbClient.delete("User");
-  //   return res;
-  // }
-
-  // Future<List<Product>> getProducts() async {
-  //   var dbClient = await db;
-  //   List<Product> products = new List<Product>();
-  //   List<Map> productRaw = await dbClient.query("Product");
+  Future<List<Task>> getTasks() async {
+    var dbClient = await db;
+    List<Task> tasks = new List<Task>();
+    List<Map> taskRaw = await dbClient.query("Task");
     
-  //   if (productRaw.length > 0) {
-  //     productRaw.forEach((product) {
-  //       products.add(new Product.map(product));
-  //     });
-  //   }
+    if (taskRaw.length > 0) {
+      taskRaw.forEach((task) {
+        tasks.add(new Task.map(task));
+      });
+    }
 
-  //   return products;
-  // }
-
-  // Future<List<Product>> getProductsByUser(int userId) async {
-  //   var dbClient = await db;
-  //   List<Product> products = new List<Product>();
-  //   List<Map> productRaw = await dbClient.query("Product", where: "userId = $userId");
-    
-  //   if (productRaw.length > 0) {
-  //     productRaw.forEach((product) {
-  //       products.add(new Product.map(product));
-  //     });
-  //   }
-
-  //   return products;
-  // }
-
-  // Future<User> isLoggedIn(String username, String password) async {
-  //   var dbClient = await db;
-  //   List<Map> userRaw = await dbClient.rawQuery(
-  //     "SELECT * FROM User WHERE username = '$username' AND password = '$password'"
-  //   );
-    
-  //   if (userRaw.length > 0) {
-  //     return new User.map(userRaw[0]);
-  //   }
-
-  //   return null;
-  // }
+    return tasks;
+  }
 
 }

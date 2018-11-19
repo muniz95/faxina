@@ -13,7 +13,7 @@ class FaxinaApp extends StatelessWidget {
         theme: new ThemeData(
           primarySwatch: Colors.teal,
         ),
-        home: new FaxinaPage(title: 'Flutter Demo Home Page'),
+        home: new FaxinaPage(title: 'Lista de afazeres'),
       )
     );
   }
@@ -29,10 +29,13 @@ class FaxinaPage extends StatefulWidget {
 }
 
 class _FaxinaPageState extends State<FaxinaPage> {
+  TaskBloc _bloc;
   
   @override
   Widget build(BuildContext context) {
-    final TaskBloc _bloc = Provider.of(context).taskBloc;
+    _bloc = Provider.of(context).taskBloc;
+    _bloc.fetchTasks();
+
     // List<Task> _taskList;
     return new Scaffold(
       appBar: new AppBar(
@@ -52,7 +55,14 @@ class _FaxinaPageState extends State<FaxinaPage> {
               ),
             );
           } else {
-            return Text('Não há dados');
+            return new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Não há dados'),
+                ],
+              ),
+            );
           }
         }
       ),

@@ -3,8 +3,16 @@ import 'package:faxina/models/task.dart';
 
 class TaskService {
   final DB db = new DB();
+
+  TaskService() {
+    this.db.initDb();
+  }
   
-  static List<Task> getAllTasks() {
-    return new List<Task>();
+  Future<List<Task>> getAllTasks() async {
+    return await this.db.getTasks();
+  }
+  
+  Future<int> saveTask(Task task) async {
+    return await this.db.saveTask(task);
   }
 }
