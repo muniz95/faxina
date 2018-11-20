@@ -10,7 +10,8 @@ class Task {
     return new Task(
       id: obj["id"],
       name: obj["name"],
-      lastDone: obj["lastDone"],
+      // lastDone: DateTime.parse(obj["lastDone"]),
+      lastDone: (obj["lastDone"] == null) ? null : DateTime.parse(obj["lastDone"]),
       interval: obj["interval"],
     );
   }
@@ -19,7 +20,7 @@ class Task {
     Map<String, dynamic> map = new Map<String, dynamic>();
     map["id"] = id;
     map["name"] = name;
-    map["lastDone"] = lastDone;
+    map["lastDone"] = (lastDone != null) ? lastDone.toIso8601String() : null;
     map["interval"] = interval;
 
     return map;

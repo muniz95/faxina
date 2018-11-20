@@ -15,4 +15,8 @@ class TaskService {
   Future<int> saveTask(Task task) async {
     return await this.db.saveTask(task);
   }
+  
+  Future<int> updateTask(Task task) async {
+    return await this.db.updateTask(task);
+  }
 }

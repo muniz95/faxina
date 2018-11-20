@@ -12,23 +12,15 @@ class TaskForm extends StatefulWidget {
 class TaskFormState extends State<TaskForm> {
   final formKey = new GlobalKey<FormState>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  TaskBloc _bloc;
-  Task task = new Task();
 
   @override
   Widget build(BuildContext context) {
-    var submitBtn = new RaisedButton(
-      onPressed: () {
-        _submit();
-        Navigator.of(context).pop();
-      },
-      child: new Text("Salvar"),
-    );
+    final _bloc = Provider.of(context).taskBloc;
 
-    _bloc = Provider.of(context).taskBloc;
     return new StreamBuilder(
       stream: _bloc.selectedTask,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        Task task = snapshot.data as Task;
         return new Scaffold(
           appBar: new AppBar(
             title: new Text("Cadastro de tarefas"),
@@ -44,12 +36,12 @@ class TaskFormState extends State<TaskForm> {
                   key: formKey,
                   child: new Column(
                     children: <Widget>[
-                      _nameField(),
-                      _intervalField(),
+                      _nameField(task),
+                      _intervalField(task),
                     ],
                   ),
                 ),
-                submitBtn
+                _submitBtn(_bloc, task),
               ],
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
@@ -59,10 +51,11 @@ class TaskFormState extends State<TaskForm> {
     );
   }
 
-  Padding _nameField() =>
+  Padding _nameField(Task task) =>
     new Padding(
       padding: const EdgeInsets.all(8.0),
       child: new TextFormField(
+        initialValue: task.name,
         onSaved: (val) {
           task.name = val;
         },
@@ -75,11 +68,12 @@ class TaskFormState extends State<TaskForm> {
       ),
     );
 
-  Padding _intervalField() =>
+  Padding _intervalField(Task task) =>
     new Padding(
       padding: const EdgeInsets.all(8.0),
       child: new TextFormField(
         keyboardType: TextInputType.number,
+        initialValue: '${task.interval ?? ''}',
         onSaved: (val) {
           task.interval = int.parse(val);
         },
@@ -92,14 +86,28 @@ class TaskFormState extends State<TaskForm> {
       ),
     );
 
-  void _submit() async {
+  void _submit(TaskBloc bloc, Task task) async {
     final form = formKey.currentState;
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
     if (form.validate()) {
       form.save();
-      await _bloc.addTask(task);
+      if (task.id != null) {
+        await bloc.updateTask(task);
+      } else {
+        await bloc.addTask(task);
+      }
     }
+  }
+
+  RaisedButton _submitBtn(TaskBloc bloc, Task task) {
+    return new RaisedButton(
+      onPressed: () {
+        _submit(bloc, task);
+        Navigator.of(context).pop();
+      },
+      child: new Text("Salvar"),
+    );
   }
 
 }

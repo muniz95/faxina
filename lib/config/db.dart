@@ -45,6 +45,12 @@ class DB {
     return res;
   }
 
+  Future<int> updateTask(Task task) async {
+    var dbClient = await db;
+    int res = await dbClient.update("Task", task.toMap(), where: 'id = ${task.id}');
+    return res;
+  }
+
   Future<int> deleteTasks() async {
     var dbClient = await db;
     int res = await dbClient.delete("Task");
@@ -59,6 +65,23 @@ class DB {
     if (taskRaw.length > 0) {
       taskRaw.forEach((task) {
         tasks.add(new Task.map(task));
+      });
+    }
+
+    return tasks;
+  }
+
+  Future<List<Task>> getPendingTasks() async {
+    var dbClient = await db;
+    List<Task> tasks = new List<Task>();
+    List<Map> taskRaw = await dbClient.query("Task");
+    
+    if (taskRaw.length > 0) {
+      taskRaw.forEach((task) {
+        Task t = new Task.map(task);
+        if (t.lastDone.difference(DateTime.now()).inDays >= t.interval) {
+          tasks.add(new Task.map(task));
+        }
       });
     }
 

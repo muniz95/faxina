@@ -16,6 +16,7 @@ dependencies:
   rxdart: ^0.18.1
   sqflite: '^0.12.1'
   path_provider: any
+  flutter_slidable: ^0.4.9
   flutter:
     sdk: flutter
 

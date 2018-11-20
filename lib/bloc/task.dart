@@ -9,16 +9,44 @@ class TaskBloc {
   final BehaviorSubject<Task> _selectedTask = BehaviorSubject<Task>();
   Stream<Task> get selectedTask => _selectedTask.stream;
 
+  Function(Task) get selectTask => _selectedTask.add;
+
   final TaskService _service = new TaskService();
 
-  Future<Null> fetchTasks() async {
-    List<Task> tasks = _taskList.value ?? await new TaskService().getAllTasks();
-    _taskList.add(tasks);
+  fetchTasks() {
+    new TaskService().getAllTasks().then((tasks) {
+      _taskList.add(tasks);
+      return tasks;
+    });
+
+  }
+
+  clearSelectedTask() {
+    _selectedTask.add(new Task());
   }
 
   addTask(Task task) async {
     List<Task> tasks = _taskList.value ?? new List<Task>();
     if (await _service.saveTask(task) != null) {
+      tasks.add(task);
+      _taskList.add(tasks);
+    }
+  }
+  
+  updateTask(Task task) async {
+    if (await _service.updateTask(task) != null) {
+      List<Task> tasks = _taskList.value ?? new List<Task>();
+      tasks.removeWhere((Task t) => t.id == task.id);
+      tasks.add(task);
+      _taskList.add(tasks);
+    }
+  }
+  
+  checkTask(Task task) async {
+    task.lastDone = DateTime.now();
+    if (await _service.updateTask(task) != null) {
+      List<Task> tasks = _taskList.value ?? new List<Task>();
+      tasks.removeWhere((Task t) => t.id == task.id);
       tasks.add(task);
       _taskList.add(tasks);
     }
