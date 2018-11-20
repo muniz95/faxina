@@ -42,22 +42,37 @@ class FaxinaPage extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               List<Task> taskList = snapshot.data as List<Task>;
-              return
-              ListView.builder(
-                itemCount: taskList.length,
-                itemBuilder: (_, int index) =>
-                  _slidableCard(taskList[index], _bloc, context),
-              );
-            } else {
-              return new Center(
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Não há dados'),
-                  ],
+              if (taskList.length > 0) {
+                return ListView.builder(
+                  itemCount: taskList.length,
+                  itemBuilder: (_, int index) =>
+                    _slidableCard(taskList[index], _bloc, context),
+                );
+              }
+              else {
+                return new Center(
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Não há dados'),
+                    ],
+                  ),
+                );
+              }
+            }
+            else {
+              return Center(
+                child: new Dialog(
+                  child: new Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      new CircularProgressIndicator(),
+                      new Text("Loading"),
+                    ],
+                  ),
                 ),
               );
-            }
+            } 
           }
         ),
       ),      

@@ -20,33 +20,48 @@ class TaskFormState extends State<TaskForm> {
     return new StreamBuilder(
       stream: _bloc.selectedTask,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        Task task = snapshot.data as Task;
-        return new Scaffold(
-          appBar: new AppBar(
-            title: new Text("Cadastro de tarefas"),
-          ),
-          body: new Center(
-            child: new Column(
-              children: <Widget>[
-                new Text(
-                  "Nova tarefa",
-                  textScaleFactor: 2.0,
-                ),
-                new Form(
-                  key: formKey,
-                  child: new Column(
-                    children: <Widget>[
-                      _nameField(task),
-                      _intervalField(task),
-                    ],
-                  ),
-                ),
-                _submitBtn(_bloc, task),
-              ],
-              crossAxisAlignment: CrossAxisAlignment.center,
+        if (snapshot.hasData) {
+          Task task = snapshot.data as Task;
+          return new Scaffold(
+            appBar: new AppBar(
+              title: new Text("Cadastro de tarefas"),
             ),
-          )
-        );
+            body: new Center(
+              child: new Column(
+                children: <Widget>[
+                  new Text(
+                    "Nova tarefa",
+                    textScaleFactor: 2.0,
+                  ),
+                  new Form(
+                    key: formKey,
+                    child: new Column(
+                      children: <Widget>[
+                        _nameField(task),
+                        _intervalField(task),
+                      ],
+                    ),
+                  ),
+                  _submitBtn(_bloc, task),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.center,
+              ),
+            )
+          );
+        }
+        else {
+          return Center(
+            child: new Dialog(
+              child: new Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  new CircularProgressIndicator(),
+                  new Text("Loading"),
+                ],
+              ),
+            ),
+          );
+        }
       },
     );
   }
