@@ -3,6 +3,9 @@ import 'package:faxina/bloc/task.dart';
 import 'package:faxina/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
 
 class TaskForm extends StatefulWidget {
   @override
@@ -19,52 +22,54 @@ class TaskFormState extends State<TaskForm> {
 
     return new StreamBuilder(
       stream: _bloc.selectedTask,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          Task task = snapshot.data as Task;
-          return new Scaffold(
-            appBar: new AppBar(
-              title: new Text("Cadastro de tarefas"),
-            ),
-            body: new Center(
-              child: new Column(
-                children: <Widget>[
-                  new Text(
-                    "Nova tarefa",
-                    textScaleFactor: 2.0,
-                  ),
-                  new Form(
-                    key: formKey,
-                    child: new Column(
-                      children: <Widget>[
-                        _nameField(task),
-                        _intervalField(task),
-                      ],
-                    ),
-                  ),
-                  _submitBtn(_bloc, task),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.center,
-              ),
-            )
-          );
-        }
-        else {
-          return Center(
-            child: new Dialog(
-              child: new Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  new CircularProgressIndicator(),
-                  new Text("Loading"),
-                ],
-              ),
-            ),
-          );
-        }
-      },
+      builder: (BuildContext context, AsyncSnapshot snapshot) =>
+        snapshot.hasData 
+          ? _hasDataWidget(_bloc, snapshot.data)
+          : _loadingDataWidget()
     );
   }
+
+  Widget _hasDataWidget(TaskBloc _bloc, Task task) =>
+    new Scaffold(
+      appBar: new AppBar(
+        title: new Text("Cadastro de tarefas"),
+      ),
+      body: new Center(
+        child: new Column(
+          children: <Widget>[
+            new Text(
+              "Nova tarefa",
+              textScaleFactor: 2.0,
+            ),
+            new Form(
+              key: formKey,
+              child: new Column(
+                children: <Widget>[
+                  _nameField(task),
+                  _intervalField(task),
+                  _lastDoneField(task),
+                ],
+              ),
+            ),
+            _submitBtn(_bloc, task),
+          ],
+          crossAxisAlignment: CrossAxisAlignment.center,
+        ),
+      )
+    );
+
+  Widget _loadingDataWidget() =>
+    new Center(
+      child: new Dialog(
+        child: new Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            new CircularProgressIndicator(),
+            new Text("Loading"),
+          ],
+        ),
+      ),
+    );
 
   Padding _nameField(Task task) =>
     new Padding(
@@ -101,6 +106,36 @@ class TaskFormState extends State<TaskForm> {
       ),
     );
 
+  _lastDoneField(Task task) {
+    final dateFormat = DateFormat("dd/MM/yyyy");
+    BehaviorSubject<DateTime> lastDone = BehaviorSubject<DateTime>()..sink.add(task.lastDone);
+    return new StreamBuilder(
+      stream: lastDone,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          DateTime _lastDone = snapshot.data;
+          return new Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: new Row(
+              children: <Widget>[
+                new Text('Realizada em ${dateFormat.format(_lastDone)}'),
+                new IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    task.lastDone = null;
+                    lastDone..add(null)..close();
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+        else {
+          return new Text('');
+        }
+      }
+    );
+  }
   void _submit(TaskBloc bloc, Task task) async {
     final form = formKey.currentState;
     SystemChannels.textInput.invokeMethod('TextInput.hide');
