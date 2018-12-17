@@ -18,6 +18,11 @@ dependencies:
   path_provider: any
   flutter_slidable: ^0.4.9
   datetime_picker_formfield: ^0.1.7
+  # android_alarm_manager: ^0.2.1
+  firebase_auth: ^0.6.2+1
+  cloud_firestore: ^0.7.1
+  firebase_messaging: ^2.0.2
+  google_sign_in: ^3.2.2
   flutter:
     sdk: flutter
 
