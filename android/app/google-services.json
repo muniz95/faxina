@@ -1,42 +1,48 @@
 {
-    "project_info": {
-        "project_number": "766303430470",
-        "firebase_url": "https://faxina-app.firebaseio.com",
-        "project_id": "faxina-app",
-        "storage_bucket": "faxina-app.appspot.com"
-    },
-    "client": [
-        {
-            "client_info": {
-                "mobilesdk_app_id": "1:766303430470:android:c043cb33a8d006b3",
-                "android_client_info": {
-                    "package_name": "br.com.muniz95.faxina"
-                }
-            },
-            "oauth_client": [
-                {
-                    "client_id": "766303430470-3thagu21b61rap15urj5qum8eth00qrp.apps.googleusercontent.com",
-                    "client_type": 3
-                }
-            ],
-            "api_key": [
-                {
-                    "current_key": "AIzaSyAUTPyucnpLUPMHtxaSjBEjya54oNRyAk4"
-                }
-            ],
-            "services": {
-                "analytics_service": {
-                    "status": 1
-                },
-                "appinvite_service": {
-                    "status": 1,
-                    "other_platform_oauth_client": []
-                },
-                "ads_service": {
-                    "status": 2
-                }
-            }
+  "project_info": {
+    "project_number": "766303430470",
+    "firebase_url": "https://faxina-app.firebaseio.com",
+    "project_id": "faxina-app",
+    "storage_bucket": "faxina-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766303430470:android:4f1e9a9c14860bb1",
+        "android_client_info": {
+          "package_name": "br.com.muniz95.faxina"
         }
-    ],
-    "configuration_version": "1"
+      },
+      "oauth_client": [
+        {
+          "client_id": "766303430470-d2ptph06ddrhgi6aa91uk2t8ktqd05jj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.muniz95.faxina",
+            "certificate_hash": "8ce73ca987744f0482e66d7d4990fa211dc80495"
+          }
+        },
+        {
+          "client_id": "766303430470-3thagu21b61rap15urj5qum8eth00qrp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUTPyucnpLUPMHtxaSjBEjya54oNRyAk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766303430470-3thagu21b61rap15urj5qum8eth00qrp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }

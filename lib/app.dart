@@ -1,5 +1,6 @@
 import 'package:faxina/bloc/provider.dart';
 import 'package:faxina/bloc/task.dart';
+import 'package:faxina/services/auth.service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:faxina/models/task.dart';
 import 'package:faxina/screens/taskForm.dart';
@@ -11,29 +12,35 @@ class FaxinaApp extends StatelessWidget {
     return Provider(
       child: MaterialApp(
         title: 'Faxina',
-        theme: new ThemeData(
-          primarySwatch: Colors.teal,
+        theme: ThemeData(
+          primarySwatch: Colors.amber,
         ),
-        home: new FaxinaPage(title: 'Lista de afazeres'),
+        home: FaxinaPage(),
       )
     );
   }
 }
 
-class FaxinaPage extends StatelessWidget {
-  FaxinaPage({Key key, this.title}) : super(key: key);
+class FaxinaPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _FaxinaPageState();
+}
 
-  final String title;
+class _FaxinaPageState extends State<FaxinaPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    Authentication auth = Authentication();
+    auth.signInWithGoogle();
+  }
   
   @override
   Widget build(BuildContext context) {
     final _bloc = Provider.of(context).taskBloc;
 
     // List<Task> _taskList;
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(title),
-      ),
+    return Scaffold(
       body: Container(
         margin: EdgeInsets.all(10.0),
         child: StreamBuilder(
@@ -50,7 +57,7 @@ class FaxinaPage extends StatelessWidget {
                 );
               }
               else {
-                return new Center(
+                return Center(
                   child: new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
