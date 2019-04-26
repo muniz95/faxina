@@ -1,7 +1,8 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+export 'package:firebase_auth/firebase_auth.dart';
 
-class Authentication {
+class AuthService {
   final _firebaseAuth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
 
@@ -17,4 +18,6 @@ class Authentication {
     final FirebaseUser user = await _firebaseAuth.signInWithCredential(credential);
     print("signed in " + user.displayName);
   }
+
+  Stream<FirebaseUser> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged;
 }

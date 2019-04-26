@@ -27,65 +27,74 @@ class FaxinaPage extends StatefulWidget {
 }
 
 class _FaxinaPageState extends State<FaxinaPage> {
+  final AuthService _authentication = AuthService();
+  Stream<FirebaseUser> currentUser;
 
   @override
   void initState() {
     super.initState();
-    Authentication auth = Authentication();
-    auth.signInWithGoogle();
+    _authentication.signInWithGoogle();
+    currentUser = _authentication.onAuthStateChanged;
   }
   
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of(context).taskBloc;
+    final _taskBloc = Provider.of(context).taskBloc;
 
-    // List<Task> _taskList;
     return Scaffold(
       body: Container(
         margin: EdgeInsets.all(10.0),
         child: StreamBuilder(
-          initialData: _bloc.fetchTasks(),
-          stream: _bloc.taskList,
+          stream: currentUser,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              List<Task> taskList = snapshot.data as List<Task>;
-              if (taskList.length > 0) {
-                return ListView.builder(
-                  itemCount: taskList.length,
-                  itemBuilder: (_, int index) =>
-                    _slidableCard(taskList[index], _bloc, context),
-                );
-              }
-              else {
-                return Center(
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('Não há dados'),
-                    ],
-                  ),
-                );
-              }
+              return StreamBuilder<List<Task>>(
+                initialData: _taskBloc.fetchTasks(),
+                stream: _taskBloc.taskList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<Task> taskList = snapshot.data;
+                    if (taskList.length > 0) {
+                      return ListView.builder(
+                        itemCount: taskList.length,
+                        itemBuilder: (_, int index) =>
+                          _slidableCard(taskList[index], _taskBloc, context),
+                      );
+                    } else {
+                      return Center(
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text('Não há dados'),
+                          ],
+                        ),
+                      );
+                    }
+                  } else {
+                    return Center(
+                      child: new Dialog(
+                        child: new Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            new CircularProgressIndicator(),
+                            new Text("Loading"),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                }
+              );
             }
             else {
-              return Center(
-                child: new Dialog(
-                  child: new Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      new CircularProgressIndicator(),
-                      new Text("Loading"),
-                    ],
-                  ),
-                ),
-              );
+              return Container();
             } 
           }
         ),
       ),      
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
-          _bloc.clearSelectedTask();
+          _taskBloc.clearSelectedTask();
           Navigator.push(
             context,
             MaterialPageRoute(

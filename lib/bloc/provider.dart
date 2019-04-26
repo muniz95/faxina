@@ -1,9 +1,11 @@
+import 'package:faxina/bloc/auth.bloc.dart';
 import 'package:faxina/bloc/task.dart';
 import 'package:flutter/material.dart';
 
 class Provider extends InheritedWidget {
   final Widget child;
-  final TaskBloc taskBloc = new TaskBloc();
+  final TaskBloc taskBloc = TaskBloc();
+  final AuthBloc authBloc = AuthBloc();
 
   Provider({this.child}) : super(child: child);
 
@@ -13,6 +15,6 @@ class Provider extends InheritedWidget {
   }
 
   static Provider of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(Provider) as Provider);
+    return context.inheritFromWidgetOfExactType(Provider);
   }
 }
