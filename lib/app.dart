@@ -1,3 +1,4 @@
+import 'package:faxina/bloc/auth.bloc.dart';
 import 'package:faxina/bloc/provider.dart';
 import 'package:faxina/bloc/task.dart';
 import 'package:faxina/services/auth.service.dart';
@@ -27,29 +28,26 @@ class FaxinaPage extends StatefulWidget {
 }
 
 class _FaxinaPageState extends State<FaxinaPage> {
-  final AuthService _authentication = AuthService();
-  Stream<FirebaseUser> currentUser;
+  TaskBloc _taskBloc;
+  AuthBloc _authBloc;
 
   @override
-  void initState() {
-    super.initState();
-    _authentication.signInWithGoogle();
-    currentUser = _authentication.onAuthStateChanged;
+  void didChangeDependencies() {
+    _taskBloc ??= Provider.of(context).taskBloc..fetchTasks();
+    _authBloc ??= Provider.of(context).authBloc..signIn();
+    super.didChangeDependencies();
   }
   
   @override
   Widget build(BuildContext context) {
-    final _taskBloc = Provider.of(context).taskBloc;
-
     return Scaffold(
       body: Container(
         margin: EdgeInsets.all(10.0),
         child: StreamBuilder(
-          stream: currentUser,
+          stream: _authBloc.currentUser,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return StreamBuilder<List<Task>>(
-                initialData: _taskBloc.fetchTasks(),
                 stream: _taskBloc.taskList,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {

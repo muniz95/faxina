@@ -7,11 +7,10 @@ class AuthBloc {
 
   final AuthService _service = AuthService();
 
-  signIn() {
-    _service.signInWithGoogle().then((loggedUser) async {
-      _currentUser.add(await _service.onAuthStateChanged.first);
-    });
-
+  signIn() async {
+    await _service.signInWithGoogle();
+    var user = await _service.firebaseUser;
+    _currentUser.add(user);
   }
 
   void dispose() {

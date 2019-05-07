@@ -20,4 +20,5 @@ class AuthService {
   }
 
   Stream<FirebaseUser> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged;
+  Future<FirebaseUser> get firebaseUser => _firebaseAuth.onAuthStateChanged.first;
 }
