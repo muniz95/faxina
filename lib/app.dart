@@ -1,10 +1,9 @@
 import 'package:faxina/bloc/auth.bloc.dart';
 import 'package:faxina/bloc/provider.dart';
-import 'package:faxina/bloc/task.dart';
-import 'package:faxina/services/auth.service.dart';
+import 'package:faxina/bloc/task.bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:faxina/models/task.dart';
-import 'package:faxina/screens/taskForm.dart';
+import 'package:faxina/screens/task_form.screen.dart';
 import 'package:flutter/material.dart';
 
 class FaxinaApp extends StatelessWidget {
@@ -41,6 +40,9 @@ class _FaxinaPageState extends State<FaxinaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+      ),
       body: Container(
         margin: EdgeInsets.all(10.0),
         child: StreamBuilder(
@@ -96,7 +98,7 @@ class _FaxinaPageState extends State<FaxinaPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => TaskForm(),
+              builder: (BuildContext context) => TaskFormScreen(),
             ),
           );
         },
@@ -134,7 +136,7 @@ class _FaxinaPageState extends State<FaxinaPage> {
                   Navigator.push(
                     ctx,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => TaskForm(),
+                      builder: (BuildContext context) => TaskFormScreen(),
                     ),
                   );
                 }

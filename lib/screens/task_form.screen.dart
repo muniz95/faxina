@@ -1,17 +1,17 @@
 import 'package:faxina/bloc/provider.dart';
-import 'package:faxina/bloc/task.dart';
+import 'package:faxina/bloc/task.bloc.dart';
 import 'package:faxina/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
-class TaskForm extends StatefulWidget {
+class TaskFormScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => TaskFormState();
+  State<StatefulWidget> createState() => _TaskFormScreenState();
 }
 
-class TaskFormState extends State<TaskForm> {
+class _TaskFormScreenState extends State<TaskFormScreen> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 

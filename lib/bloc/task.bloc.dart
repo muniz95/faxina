@@ -1,4 +1,4 @@
-import 'package:faxina/services/taskService.dart';
+import 'package:faxina/services/task.service.dart';
 import "package:rxdart/rxdart.dart";
 import 'package:faxina/models/task.dart';
 

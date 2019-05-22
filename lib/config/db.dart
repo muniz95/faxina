@@ -30,7 +30,7 @@ class DB {
     // When creating the db, create the table
     await db.execute("""
       CREATE TABLE Task(
-        id INTEGER PRIMARY KEY,
+        id TEXT PRIMARY KEY,
         name TEXT,
         lastDone Date,
         interval int
