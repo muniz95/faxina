@@ -1,5 +1,5 @@
 import 'package:faxina/config/db.dart';
-import 'package:faxina/models/task.dart';
+import 'package:faxina/models/task.model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskService {
@@ -14,13 +14,19 @@ class TaskService {
     return Task.fromSnapshot(docs);
   }
   
-  saveTask(Task task) async {
+  Future<String> saveTask(Task task) async {
     DocumentReference ref = await Firestore.instance.collection('task').add(task.toMap());
+    return ref.documentID;
     // return await this.db.saveTask(task);
   }
   
-  Future<int> updateTask(Task task) async {
-    await Firestore.instance.collection('task').document(task.id).updateData(task.toMap());
+  Future<bool> updateTask(Task task) async {
+    try {
+      await Firestore.instance.collection('task').document(task.id).updateData(task.toMap());
+      return true;
+    } catch (Exception) {
+      return false;
+    }
     // return await this.db.updateTask(task);
   }
   

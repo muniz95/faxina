@@ -1,6 +1,6 @@
 import 'package:faxina/bloc/provider.dart';
 import 'package:faxina/bloc/task.bloc.dart';
-import 'package:faxina/models/task.dart';
+import 'package:faxina/models/task.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -14,32 +14,34 @@ class TaskFormScreen extends StatefulWidget {
 class _TaskFormScreenState extends State<TaskFormScreen> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  TaskBloc _bloc;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _bloc = Provider.of(context).taskBloc;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _bloc = Provider.of(context).taskBloc;
-
     return StreamBuilder(
       stream: _bloc.selectedTask,
       builder: (BuildContext context, AsyncSnapshot snapshot) =>
         snapshot.hasData 
-          ? _hasDataWidget(_bloc, snapshot.data)
+          ? _hasDataWidget(snapshot.data)
           : _loadingDataWidget()
     );
   }
 
-  Widget _hasDataWidget(TaskBloc _bloc, Task task) =>
+  Widget _hasDataWidget(Task task) =>
     Scaffold(
       appBar: AppBar(
         title: Text("Cadastro de tarefas"),
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "Nova tarefa",
-              textScaleFactor: 2.0,
-            ),
             Form(
               key: formKey,
               child: Column(
@@ -58,22 +60,34 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
     );
 
   Widget _loadingDataWidget() =>
-    Center(
-      child: Dialog(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(),
-            Text("Loading"),
-          ],
+    Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Dialog(
+          elevation: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              Divider(),
+              Text("Loading"),
+            ],
+          ),
         ),
       ),
     );
 
-  Padding _nameField(Task task) =>
-    Padding(
-      padding: const EdgeInsets.all(8.0),
+  Widget _nameField(Task task) =>
+    Container(
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        color: Colors.amber
+      ),
       child: TextFormField(
+        textCapitalization: TextCapitalization.sentences,
         initialValue: task.name,
         onSaved: (val) {
           task.name = val;
@@ -83,13 +97,21 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
               ? "Name must have atleast 1 chars"
               : null;
         },
-        decoration: InputDecoration(labelText: "Nome"),
+        decoration: InputDecoration(
+          labelText: "Nome",
+          border: InputBorder.none
+        ),
       ),
     );
 
-  Padding _intervalField(Task task) =>
-    Padding(
-      padding: const EdgeInsets.all(8.0),
+  Widget _intervalField(Task task) =>
+    Container(
+      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        color: Colors.amber
+      ),
       child: TextFormField(
         keyboardType: TextInputType.number,
         initialValue: '${task.interval ?? ''}',
@@ -101,7 +123,13 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
               ? "O intervalo deve ser de no mínimo 1 dia"
               : null;
         },
-        decoration: InputDecoration(labelText: "Intervalo de tempo (em dias)"),
+        style: TextStyle(
+          height: 0
+        ),
+        decoration: InputDecoration(
+          labelText: "Intervalo de tempo (em dias)",
+          border: InputBorder.none
+        ),
       ),
     );
 
@@ -114,7 +142,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
         if (snapshot.hasData) {
           DateTime _lastDone = snapshot.data;
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               children: <Widget>[
                 Text('Realizada em ${dateFormat.format(_lastDone)}'),

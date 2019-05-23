@@ -1,4 +1,4 @@
-import 'package:faxina/models/task.dart';
+import 'package:faxina/models/task.model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';

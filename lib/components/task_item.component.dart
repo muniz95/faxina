@@ -1,5 +1,5 @@
 import 'package:faxina/bloc/task.bloc.dart';
-import 'package:faxina/models/task.dart';
+import 'package:faxina/models/task.model.dart';
 import 'package:flutter/material.dart';
 
 class TaskItem extends StatelessWidget {

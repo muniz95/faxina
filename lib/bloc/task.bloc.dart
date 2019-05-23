@@ -1,6 +1,6 @@
 import 'package:faxina/services/task.service.dart';
 import "package:rxdart/rxdart.dart";
-import 'package:faxina/models/task.dart';
+import 'package:faxina/models/task.model.dart';
 
 class TaskBloc {
   final BehaviorSubject<List<Task>> _taskList = BehaviorSubject<List<Task>>();
@@ -13,27 +13,25 @@ class TaskBloc {
 
   final TaskService _service = new TaskService();
 
-  fetchTasks() {
-    new TaskService().getAllTasks().then((tasks) {
-      _taskList.add(tasks);
-      return tasks;
-    });
-
+  void fetchTasks() async {
+    _taskList.add(await TaskService().getAllTasks());
   }
 
-  clearSelectedTask() {
+  void clearSelectedTask() {
     _selectedTask.add(new Task());
   }
 
-  addTask(Task task) async {
+  Future addTask(Task task) async {
     List<Task> tasks = _taskList.value ?? new List<Task>();
-    if (await _service.saveTask(task) != null) {
+    String taskId = await _service.saveTask(task);
+    if (taskId != null) {
+      task.id = taskId;
       tasks.add(task);
       _taskList.add(tasks);
     }
   }
   
-  updateTask(Task task) async {
+  Future updateTask(Task task) async {
     if (await _service.updateTask(task) != null) {
       List<Task> tasks = _taskList.value ?? new List<Task>();
       tasks.removeWhere((Task t) => t.id == task.id);
@@ -42,14 +40,22 @@ class TaskBloc {
     }
   }
   
-  checkTask(Task task) async {
+  Future checkTask(Task task) async {
     task.lastDone = DateTime.now();
-    if (await _service.updateTask(task) != null) {
+    if (await _service.updateTask(task)) {
       List<Task> tasks = _taskList.value ?? new List<Task>();
       tasks.removeWhere((Task t) => t.id == task.id);
       tasks.add(task);
       _taskList.add(tasks);
     }
+  }
+
+  String leftDays(Task task) {
+    int leftDays = task.lastDone
+      .add(Duration(days: task.interval))
+      .difference(DateTime.now())
+      .inDays;
+    return leftDays == 1 ? 'Falta 1 dia' : 'Faltam $leftDays dias';
   }
 
   void dispose() {

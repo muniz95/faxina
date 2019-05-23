@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "766303430470-i85nksf0abp39ch19g3ekt9u828pkr19.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.muniz95.faxina",
+            "certificate_hash": "28f6a4130c80ea959520f2972edbba2cd0a04209"
+          }
+        },
+        {
           "client_id": "766303430470-d2ptph06ddrhgi6aa91uk2t8ktqd05jj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
