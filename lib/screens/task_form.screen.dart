@@ -80,8 +80,8 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
 
   Widget _nameField(Task task) =>
     Container(
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
         color: Colors.amber
@@ -97,6 +97,9 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
               ? "Name must have atleast 1 chars"
               : null;
         },
+        style: TextStyle(
+          height: 0
+        ),
         decoration: InputDecoration(
           labelText: "Nome",
           border: InputBorder.none
@@ -158,12 +161,12 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
           );
         }
         else {
-          return Text('');
+          return Container();
         }
       }
     );
   }
-  void _submit(TaskBloc bloc, Task task) async {
+  Future _submit(TaskBloc bloc, Task task) async {
     final form = formKey.currentState;
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
@@ -179,8 +182,8 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
 
   RaisedButton _submitBtn(TaskBloc bloc, Task task) {
     return RaisedButton(
-      onPressed: () {
-        _submit(bloc, task);
+      onPressed: () async {
+        await _submit(bloc, task);
         Navigator.of(context).pop();
       },
       child: Text("Salvar"),

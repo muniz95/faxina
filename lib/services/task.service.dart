@@ -15,8 +15,12 @@ class TaskService {
   }
   
   Future<String> saveTask(Task task) async {
-    DocumentReference ref = await Firestore.instance.collection('task').add(task.toMap());
-    return ref.documentID;
+    try {
+      DocumentReference ref = await Firestore.instance.collection('task').add(task.toMap());
+      return ref.documentID;
+    } catch (Exception) {
+      return null;
+    }
     // return await this.db.saveTask(task);
   }
   
