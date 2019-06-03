@@ -8,58 +8,87 @@ class TaskBloc {
   
   final BehaviorSubject<Task> _selectedTask = BehaviorSubject<Task>();
   Stream<Task> get selectedTask => _selectedTask.stream;
+  
+  final BehaviorSubject<bool> _isLoading = BehaviorSubject<bool>();
+  Stream<bool> get isLoading => _isLoading.stream;
 
   Function(Task) get selectTask => _selectedTask.add;
 
   final TaskService _service = new TaskService();
 
   void fetchTasks() async {
-    _taskList.add(await TaskService().getAllTasks());
+    _taskList.add(await TaskService().getAllTasks()..sort(_byNearest));
   }
 
   void clearSelectedTask() {
-    _selectedTask.add(new Task());
+    _selectedTask.add(Task());
   }
 
   Future addTask(Task task) async {
     List<Task> tasks = _taskList.value ?? new List<Task>();
     String taskId = await _service.saveTask(task);
     if (taskId != null) {
-      task.id = taskId;
-      tasks.add(task);
-      _taskList.add(tasks);
+      task..id = taskId;
+      _taskList.add(
+        tasks
+          ..add(task)
+          ..sort(_byNearest)
+      );
     }
   }
   
   Future updateTask(Task task) async {
     if (await _service.updateTask(task) != null) {
       List<Task> tasks = _taskList.value ?? new List<Task>();
-      tasks.removeWhere((Task t) => t.id == task.id);
-      tasks.add(task);
-      _taskList.add(tasks);
+      _taskList.add(
+        tasks
+          ..removeWhere((Task t) => t.id == task.id)
+          ..add(task)
+          ..sort(_byNearest)
+      );
     }
   }
   
   Future checkTask(Task task) async {
+    _isLoading.add(true);
     task.lastDone = DateTime.now();
     if (await _service.updateTask(task)) {
       List<Task> tasks = _taskList.value ?? new List<Task>();
-      tasks.removeWhere((Task t) => t.id == task.id);
-      tasks.add(task);
-      _taskList.add(tasks);
+      _taskList.add(
+        tasks
+          ..removeWhere((Task t) => t.id == task.id)
+          ..add(task)
+          ..sort(_byNearest)
+      );
     }
+    _isLoading.add(false);
   }
 
   String leftDays(Task task) {
-    int leftDays = task.lastDone
-      .add(Duration(days: task.interval))
+    int leftDays = _daysRemaining(task);
+
+    if (leftDays == 1) {
+      return "Falta 1 dia";
+    } else if (leftDays == 0) {
+      return "Dia da tarefa ser feita";
+    } else if (leftDays > 1) {
+      return 'Faltam $leftDays dias';
+    }
+    return "Tarefa atrasada em ${-leftDays} dias";
+  }
+
+  int _daysRemaining(Task task) => 
+    (task.lastDone ?? DateTime.now())
+      .add(Duration(days: task.interval + 1))
       .difference(DateTime.now())
       .inDays;
-    return leftDays == 1 ? 'Falta 1 dia' : 'Faltam $leftDays dias';
-  }
+
+  int _byNearest(Task a, Task b) =>
+    _daysRemaining(a).compareTo(_daysRemaining(b));
 
   void dispose() {
     _taskList.close();
     _selectedTask.close();
+    _isLoading.close();
   }
 }

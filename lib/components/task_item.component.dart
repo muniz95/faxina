@@ -8,11 +8,11 @@ class TaskItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: StreamBuilder(
+      child: StreamBuilder<Task>(
         stream: _bloc.selectedTask,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            final _topic = snapshot.data as Task;
+            final _topic = snapshot.data;
             return Text(_topic.name, style: TextStyle(fontSize: 14.0));
           }
           return Text('null');

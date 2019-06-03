@@ -1,10 +1,10 @@
 import 'package:faxina/bloc/auth.bloc.dart';
 import 'package:faxina/bloc/provider.dart';
 import 'package:faxina/bloc/task.bloc.dart';
+import 'package:faxina/components/task_card.component.dart';
 import 'package:faxina/models/task.model.dart';
 import 'package:faxina/screens/task_form.screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TasksScreen extends StatefulWidget {
   @override
@@ -30,51 +30,80 @@ class _TasksScreenState extends State<TasksScreen> {
       ),
       body: Container(
         margin: EdgeInsets.all(10.0),
-        child: StreamBuilder(
-          stream: _authBloc.currentUser,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              return StreamBuilder<List<Task>>(
-                stream: _taskBloc.taskList,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<Task> taskList = snapshot.data;
-                    if (taskList.length > 0) {
-                      return ListView.builder(
-                        itemCount: taskList.length,
-                        itemBuilder: (_, int index) =>
-                          _slidableCard(taskList[index], _taskBloc, context),
-                      );
-                    } else {
-                      return Center(
-                        child: new Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text('Não há dados'),
-                          ],
-                        ),
-                      );
+        child: Column(
+          children: <Widget>[
+            StreamBuilder(
+              stream: _authBloc.currentUser,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return StreamBuilder<List<Task>>(
+                    stream: _taskBloc.taskList,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<Task> taskList = snapshot.data;
+                        if (taskList.length > 0) {
+                          return Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: taskList.length,
+                              itemBuilder: (_, int index) =>
+                                TaskCardComponent(task: taskList[index], bloc: _taskBloc,)
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: new Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text('Não há dados'),
+                              ],
+                            ),
+                          );
+                        }
+                      } else {
+                        return Center(
+                          child: new Dialog(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                new CircularProgressIndicator(),
+                                new Text("Loading"),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
                     }
-                  } else {
-                    return Center(
-                      child: new Dialog(
-                        child: new Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            new CircularProgressIndicator(),
-                            new Text("Loading"),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
+                  );
                 }
-              );
-            }
-            else {
-              return Container();
-            } 
-          }
+                else {
+                  return Container();
+                } 
+              }
+            ),
+            StreamBuilder<bool>(
+              stream: _taskBloc.isLoading,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData && snapshot.data) {
+                  return Dialog(
+                    elevation: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(),
+                        Divider(),
+                        Text("Loading"),
+                      ],
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
+          ],
         ),
       ),      
       floatingActionButton: new FloatingActionButton(
@@ -90,58 +119,6 @@ class _TasksScreenState extends State<TasksScreen> {
         tooltip: 'Adicionar tarefa',
         child: new Icon(Icons.add),
       ),
-    );
-  }
-
-  _slidableCard(Task task, TaskBloc bloc, BuildContext ctx) {
-    return Container(
-      child: new Column(
-        children: <Widget>[
-          Slidable(
-            delegate: new SlidableDrawerDelegate(),
-            actionExtentRatio: 0.25,
-            child: new Container(
-              color: Colors.white,
-              child: ListTile(
-                leading: (task.lastDone != null) ? new Icon(Icons.check, color: (task.lastDone == null) ? Colors.grey : Colors.green,) : new Icon(Icons.check_box_outline_blank, color: Colors.grey,),
-                title: new Text(task.name ?? '---'),
-                trailing: new Text(task.lastDone != null ? _taskBloc.leftDays(task) : 'Pendente'),
-                onTap: () {
-                  print(task.id);
-                }
-              )
-            ),
-            actions: <Widget>[
-              new IconSlideAction(
-                caption: 'Editar',
-                color: Colors.blue,
-                icon: Icons.archive,
-                onTap: () {
-                  bloc.selectTask(task);
-                  Navigator.push(
-                    ctx,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => TaskFormScreen(),
-                    ),
-                  );
-                }
-              ),
-            ],
-            secondaryActions: <Widget>[
-              new IconSlideAction(
-                caption: 'Concluir',
-                color: Colors.green,
-                icon: Icons.check,
-                onTap: () {
-                  bloc.checkTask(task);
-                },
-              ),
-            ],
-            closeOnScroll: true,
-          ),
-          new Divider(color: Colors.grey)
-        ],
-      )
     );
   }
 }
