@@ -17,8 +17,11 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   void didChangeDependencies() {
-    _authBloc ??= Provider.of(context).authBloc..signIn();
-    _taskBloc ??= Provider.of(context).taskBloc..fetchTasks();
+    _authBloc ??= Provider.of(context).authBloc;
+    _taskBloc ??= Provider.of(context).taskBloc;
+    _authBloc.signIn().then((_) {
+      _taskBloc.fetchTasks();
+    });
     super.didChangeDependencies();
   }
   

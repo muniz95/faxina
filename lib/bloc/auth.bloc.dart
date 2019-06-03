@@ -7,7 +7,7 @@ class AuthBloc {
 
   final AuthService _service = AuthService();
 
-  signIn() async {
+  Future signIn() async {
     await _service.signInWithGoogle();
     var user = await _service.firebaseUser;
     _currentUser.add(user);
