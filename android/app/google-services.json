@@ -9,7 +9,7 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:766303430470:android:4f1e9a9c14860bb1",
-        "android_client_info": {
+        "android_client_info": { 
           "package_name": "br.com.muniz95.faxina"
         }
       },
