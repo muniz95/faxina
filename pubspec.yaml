@@ -16,6 +16,7 @@ dependencies:
   rxdart:
   sqflite:
   path_provider:
+  intl: ^0.15.8
   # android_alarm_manager:
   firebase_auth: ^0.11.1
   cloud_firestore: ^0.11.0+2
