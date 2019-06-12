@@ -29,6 +29,20 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              _taskBloc.clearSelectedTask();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => TaskFormScreen(),
+                ),
+              );
+            },
+          )
+        ],
         elevation: 0,
       ),
       body: Container(
@@ -108,19 +122,6 @@ class _TasksScreenState extends State<TasksScreen> {
             ),
           ],
         ),
-      ),      
-      floatingActionButton: new FloatingActionButton(
-        onPressed: () {
-          _taskBloc.clearSelectedTask();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => TaskFormScreen(),
-            ),
-          );
-        },
-        tooltip: 'Adicionar tarefa',
-        child: new Icon(Icons.add),
       ),
     );
   }

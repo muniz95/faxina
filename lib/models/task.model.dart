@@ -48,4 +48,13 @@ class Task {
 
     return map;
   }
+
+  Task clone() {
+    return Task(
+      id: this.id,
+      name: this.name,
+      lastDone: this.lastDone,
+      interval: this.interval,
+    );
+  }
 }

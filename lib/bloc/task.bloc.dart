@@ -57,7 +57,7 @@ class TaskBloc {
       _taskList.add(
         tasks
           ..removeWhere((Task t) => t.id == task.id)
-          ..add(task)
+          ..add(task.clone())
           ..sort(_byNearest)
       );
     }
