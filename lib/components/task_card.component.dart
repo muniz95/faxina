@@ -2,7 +2,7 @@ import 'package:faxina/bloc/task.bloc.dart';
 import 'package:faxina/models/task.model.dart';
 import 'package:faxina/screens/task_form.screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+// import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TaskCardComponent extends StatelessWidget {
   final Task task;
@@ -13,17 +13,48 @@ class TaskCardComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: new Column(
+      child: Column(
         children: <Widget>[
-          Slidable(
-            delegate: new SlidableDrawerDelegate(),
-            actionExtentRatio: 0.25,
-            child: new Container(
+          // Slidable(
+          //   delegate: SlidableDrawerDelegate(),
+          //   actionExtentRatio: 0.25,
+          //   child: Container(
+          //     color: Colors.white,
+          //     child: ListTile(
+          //       leading: (task.lastDone != null) ? Icon(Icons.check, color: (task.lastDone == null) ? Colors.grey : Colors.green,) : Icon(Icons.check_box_outline_blank, color: Colors.grey,),
+          //       title: Text(task.name ?? '---'),
+          //       trailing: Text(task.lastDone != null ? bloc.leftDays(task) : 'Pendente'),
+          //       onTap: () {
+          //         bloc.selectTask(task);
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (BuildContext context) => TaskFormScreen(),
+          //           ),
+          //         );
+          //       }
+          //     )
+          //   ),
+          //   actions: <Widget>[
+          //     IconSlideAction(
+          //       caption: 'Concluir',
+          //       color: Colors.green,
+          //       icon: Icons.check,
+          //       onTap: () {
+          //         bloc.checkTask(task);
+          //       },
+          //     ),
+          //   ],
+          //   closeOnScroll: true,
+          // ),
+          Dismissible(
+            key: Key(task.id),
+            child: Container(
               color: Colors.white,
               child: ListTile(
-                leading: (task.lastDone != null) ? new Icon(Icons.check, color: (task.lastDone == null) ? Colors.grey : Colors.green,) : new Icon(Icons.check_box_outline_blank, color: Colors.grey,),
-                title: new Text(task.name ?? '---'),
-                trailing: new Text(task.lastDone != null ? bloc.leftDays(task) : 'Pendente'),
+                leading: (task.lastDone != null) ? Icon(Icons.check, color: (task.lastDone == null) ? Colors.grey : Colors.green,) : Icon(Icons.check_box_outline_blank, color: Colors.grey,),
+                title: Text(task.name ?? '---'),
+                trailing: Text(task.lastDone != null ? bloc.leftDays(task) : 'Pendente'),
                 onTap: () {
                   bloc.selectTask(task);
                   Navigator.push(
@@ -35,19 +66,16 @@ class TaskCardComponent extends StatelessWidget {
                 }
               )
             ),
-            actions: <Widget>[
-              new IconSlideAction(
-                caption: 'Concluir',
-                color: Colors.green,
-                icon: Icons.check,
-                onTap: () {
+            onDismissed: (DismissDirection direction) {
+              switch (direction) {
+                case DismissDirection.startToEnd:
                   bloc.checkTask(task);
-                },
-              ),
-            ],
-            closeOnScroll: true,
+                  break;
+                default:
+              }
+            },
           ),
-          new Divider(color: Colors.grey)
+          Divider(color: Colors.grey)
         ],
       )
     );
