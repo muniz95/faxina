@@ -1,1 +1,1 @@
-final BASEURL = '<your API URL>';
+final baseURL = '<your API URL>';

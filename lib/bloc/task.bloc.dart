@@ -26,12 +26,11 @@ class TaskBloc {
 
   Future addTask(Task task) async {
     List<Task> tasks = _taskList.value ?? new List<Task>();
-    String taskId = await _service.saveTask(task);
-    if (taskId != null) {
-      task..id = taskId;
+    Task createdTask = await _service.saveTask(task);
+    if (createdTask != null) {
       _taskList.add(
         tasks
-          ..add(task)
+          ..add(createdTask)
           ..sort(_byNearest)
       );
     }
