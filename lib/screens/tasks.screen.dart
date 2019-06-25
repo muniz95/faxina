@@ -28,27 +28,86 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              _taskBloc.clearSelectedTask();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => TaskFormScreen(),
-                ),
-              );
-            },
-          )
-        ],
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   actions: <Widget>[
+      //     IconButton(
+      //       icon: Icon(Icons.add),
+      //       onPressed: () {
+      //         _taskBloc.clearSelectedTask();
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (BuildContext context) => TaskFormScreen(),
+      //           ),
+      //         );
+      //       },
+      //     )
+      //   ],
+      //   elevation: 0,
+      // ),
       body: Container(
         margin: EdgeInsets.all(10.0),
         child: Column(
           children: <Widget>[
+            Container(
+              height: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    width: 80,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                    ),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                    ),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("Atividades"),
+                  InkWell(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.add_circle, color: Colors.amber,),
+                        Text(
+                          "Adicionar tarefa",
+                          style: TextStyle(
+                            color: Colors.amber
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      _taskBloc.clearSelectedTask();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => TaskFormScreen(),
+                        )
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
             StreamBuilder<List<Task>>(
               stream: _taskBloc.taskList,
               builder: (context, snapshot) {
@@ -60,7 +119,7 @@ class _TasksScreenState extends State<TasksScreen> {
                         shrinkWrap: true,
                         itemCount: taskList.length,
                         itemBuilder: (_, int index) =>
-                          TaskCardComponent(task: taskList[index], bloc: _taskBloc,)
+                          TaskCardComponent(task: taskList[index], bloc: _taskBloc, isEven: (index % 2 == 0))
                       ),
                     );
                   } else {
