@@ -62,6 +62,19 @@ class TaskBloc {
     }
     _isLoading.add(false);
   }
+  
+  Future deleteTask(Task task) async {
+    _isLoading.add(true);
+    if (await _service.deleteTask(task)) {
+      List<Task> tasks = _taskList.value ?? new List<Task>();
+      _taskList.add(
+        tasks
+          ..removeWhere((Task t) => t.id == task.id)
+          ..sort(_byNearest)
+      );
+    }
+    _isLoading.add(false);
+  }
 
   String leftDays(Task task) {
     int leftDays = _daysRemaining(task);

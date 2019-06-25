@@ -43,7 +43,7 @@ class Task {
     Map<String, dynamic> map = new Map<String, dynamic>();
     map["id"] = id;
     map["name"] = name;
-    map["lastDone"] = lastDone;
+    map["last_done"] = lastDone?.toIso8601String();
     map["interval"] = interval;
 
     return map;

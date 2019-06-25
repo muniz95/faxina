@@ -28,11 +28,16 @@ class TaskService {
   Future<Task> saveTask(Task task) async {
     var response = await dio.post("$baseURL/tasks", data: task.toMap());
     return Task.map(response.data);
-}
+  }
   
   Future<bool> updateTask(Task task) async {
     var response = await dio.put("$baseURL/tasks/${task.id}", data: task.toMap());
-    return response.data;
+    return response.statusCode == 200;
+  }
+  
+  Future<bool> deleteTask(Task task) async {
+    var response = await dio.delete("$baseURL/tasks/${task.id}");
+    return response.statusCode == 204;
   }
   
   Future<List<Task>> getAllLocalTasks() async {

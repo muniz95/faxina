@@ -16,12 +16,12 @@ class TaskCardComponent extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerLeft,
         color: Colors.green,
-        child: Icon(Icons.delete),
+        child: Icon(Icons.check),
       ),
       secondaryBackground: Container(
         alignment: Alignment.centerRight,
         color: Colors.red,
-        child: Icon(Icons.check),
+        child: Icon(Icons.delete),
       ),
       key: Key(task.hashCode.toString()),
       child: Container(
@@ -52,6 +52,9 @@ class TaskCardComponent extends StatelessWidget {
         switch (direction) {
           case DismissDirection.startToEnd:
             await bloc.checkTask(task);
+            break;
+          case DismissDirection.endToStart:
+            await bloc.deleteTask(task);
             break;
           default:
             break;
