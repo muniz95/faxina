@@ -12,7 +12,7 @@ class Task {
     return Task(
       id: obj["id"],
       name: obj["name"],
-      lastDone: obj["lastDone"],
+      lastDone: obj["last_done"] != null ? DateTime.parse(obj["last_done"]) : null,
       interval: obj["interval"],
     );
   }

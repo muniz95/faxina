@@ -77,7 +77,7 @@ class TaskBloc {
   }
 
   String leftDays(Task task) {
-    int leftDays = _daysRemaining(task);
+    int leftDays = daysRemaining(task);
 
     if (leftDays == 1) {
       return "Falta 1 dia";
@@ -89,14 +89,14 @@ class TaskBloc {
     return "Tarefa atrasada em ${-leftDays} dias";
   }
 
-  int _daysRemaining(Task task) => 
+  int daysRemaining(Task task) => 
     (task.lastDone ?? DateTime.now())
       .add(Duration(days: task.interval + 1))
       .difference(DateTime.now())
       .inDays;
 
   int _byNearest(Task a, Task b) =>
-    _daysRemaining(a).compareTo(_daysRemaining(b));
+    daysRemaining(a).compareTo(daysRemaining(b));
 
   void dispose() {
     _taskList.close();

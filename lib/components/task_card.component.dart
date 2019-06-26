@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 class TaskCardComponent extends StatelessWidget {
   final Task task;
   final TaskBloc bloc;
-  final bool isEven;
+  final bool isLastElement;
 
-  const TaskCardComponent({Key key, this.task, this.bloc, this.isEven}) : super(key: key);
+  const TaskCardComponent({Key key, this.task, this.bloc, this.isLastElement}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class TaskCardComponent extends StatelessWidget {
                 }
               )
             ),
-            isEven ? Divider(color: Colors.grey) : Container(),
+            isLastElement ? Container() : Divider(color: Colors.grey),
           ],
         )
       ),

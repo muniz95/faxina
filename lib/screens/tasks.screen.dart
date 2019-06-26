@@ -28,23 +28,6 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: <Widget>[
-      //     IconButton(
-      //       icon: Icon(Icons.add),
-      //       onPressed: () {
-      //         _taskBloc.clearSelectedTask();
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (BuildContext context) => TaskFormScreen(),
-      //           ),
-      //         );
-      //       },
-      //     )
-      //   ],
-      //   elevation: 0,
-      // ),
       body: Container(
         margin: EdgeInsets.all(10.0),
         child: Column(
@@ -59,6 +42,19 @@ class _TasksScreenState extends State<TasksScreen> {
                     height: 60,
                     decoration: BoxDecoration(
                       color: Colors.red,
+                    ),
+                    child: StreamBuilder<List<Task>>(
+                      stream: _taskBloc.taskList,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          int totalLate = snapshot.data
+                            .where((Task t) => _taskBloc.daysRemaining(t) > t.interval)
+                            .length;
+                          return Text("Atraso: $totalLate", style: TextStyle(color: Colors.white),);
+                        }
+
+                        return CircularProgressIndicator();
+                      },
                     ),
                   ),
                   Container(
@@ -119,7 +115,7 @@ class _TasksScreenState extends State<TasksScreen> {
                         shrinkWrap: true,
                         itemCount: taskList.length,
                         itemBuilder: (_, int index) =>
-                          TaskCardComponent(task: taskList[index], bloc: _taskBloc, isEven: (index % 2 == 0))
+                          TaskCardComponent(task: taskList[index], bloc: _taskBloc, isLastElement: (index == taskList.length-1))
                       ),
                     );
                   } else {
