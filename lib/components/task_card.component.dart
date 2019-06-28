@@ -13,18 +13,8 @@ class TaskCardComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      background: Container(
-        alignment: Alignment.centerLeft,
-        color: Colors.green,
-        child: Icon(Icons.check),
-      ),
-      secondaryBackground: Container(
-        alignment: Alignment.centerRight,
-        color: Colors.red,
-        child: Icon(Icons.delete),
-      ),
-      key: Key(task.hashCode.toString()),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Container(
         child: Column(
           children: <Widget>[
@@ -45,22 +35,9 @@ class TaskCardComponent extends StatelessWidget {
                 }
               )
             ),
-            isLastElement ? Container() : Divider(color: Colors.grey),
           ],
         )
       ),
-      onDismissed: (DismissDirection direction) async {
-        switch (direction) {
-          case DismissDirection.startToEnd:
-            await bloc.checkTask(task);
-            break;
-          case DismissDirection.endToStart:
-            await bloc.deleteTask(task);
-            break;
-          default:
-            break;
-        }
-      },
     );
   }
 }

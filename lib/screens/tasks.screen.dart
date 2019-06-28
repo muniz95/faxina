@@ -50,7 +50,13 @@ class _TasksScreenState extends State<TasksScreen> {
                           int totalLate = snapshot.data
                             .where((Task t) => _taskBloc.daysRemaining(t) > t.interval)
                             .length;
-                          return Text("Atraso: $totalLate", style: TextStyle(color: Colors.white),);
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("$totalLate", style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Text("Atrasadas", style: TextStyle(color: Colors.white, fontSize: 10),),
+                            ],
+                          );
                         }
 
                         return CircularProgressIndicator();
@@ -63,12 +69,50 @@ class _TasksScreenState extends State<TasksScreen> {
                     decoration: BoxDecoration(
                       color: Colors.green,
                     ),
+                    child: StreamBuilder<List<Task>>(
+                      stream: _taskBloc.taskList,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          int totalDone = snapshot.data
+                            .where((Task t) => _taskBloc.daysRemaining(t) < t.interval)
+                            .length;
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("$totalDone", style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Text("Concluídas", style: TextStyle(color: Colors.white, fontSize: 10),),
+                            ],
+                          );
+                        }
+
+                        return CircularProgressIndicator();
+                      },
+                    ),
                   ),
                   Container(
                     width: 80,
                     height: 60,
                     decoration: BoxDecoration(
                       color: Colors.blue,
+                    ),
+                    child: StreamBuilder<List<Task>>(
+                      stream: _taskBloc.taskList,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          int totalTodo = snapshot.data
+                            .where((Task t) => _taskBloc.daysRemaining(t) == t.interval || t.lastDone == null)
+                            .length;
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("$totalTodo", style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Text("A fazer", style: TextStyle(color: Colors.white, fontSize: 10),),
+                            ],
+                          );
+                        }
+
+                        return CircularProgressIndicator();
+                      },
                     ),
                   ),
                 ],
