@@ -35,6 +35,32 @@ class TaskCardComponent extends StatelessWidget {
                 }
               )
             ),
+            Row(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Text(
+                    '50%',
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: Text(
+                      '30%',
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: Text(
+                      '20%',
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         )
       ),
