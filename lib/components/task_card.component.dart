@@ -23,7 +23,6 @@ class TaskCardComponent extends StatelessWidget {
               child: ListTile(
                 leading: (task.lastDone != null) ? Icon(Icons.check, color: (task.lastDone == null) ? Colors.grey : Colors.green,) : Icon(Icons.check_box_outline_blank, color: Colors.grey,),
                 title: Text(task.name ?? '---'),
-                trailing: Text(task.lastDone != null ? bloc.leftDays(task) : 'Pendente'),
                 onTap: () {
                   bloc.selectTask(task);
                   Navigator.push(
@@ -35,31 +34,35 @@ class TaskCardComponent extends StatelessWidget {
                 }
               )
             ),
-            Row(
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: Text(
-                    '50%',
+            Container(
+              height: 50,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(task.lastDone != null ? bloc.leftDays(task) : 'Pendente'),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: Text(
-                      '30%',
+                  Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: InkWell(
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.check_circle, color: Colors.green,),
+                            Text(
+                              "Concluir",
+                              style: TextStyle(
+                                color: Colors.green
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () => bloc.checkTask(task),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: Text(
-                      '20%',
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         )

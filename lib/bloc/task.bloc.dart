@@ -86,7 +86,7 @@ class TaskBloc {
     } else if (leftDays > 1) {
       return 'Faltam $leftDays dias';
     }
-    return "Tarefa atrasada em ${-leftDays} dias";
+    return "Atrasada em ${-leftDays} dia${leftDays > 1 ? 's' : ''}";
   }
 
   int daysRemaining(Task task) => 
