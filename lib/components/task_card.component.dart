@@ -16,6 +16,14 @@ class TaskCardComponent extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: _sideBorderColor(task),
+              width: 5,
+            ),
+          ),
+        ),
         child: Column(
           children: <Widget>[
             Container(
@@ -35,12 +43,16 @@ class TaskCardComponent extends StatelessWidget {
               )
             ),
             Container(
+              color: Colors.white,
               height: 50,
               child: Row(
                 children: <Widget>[
                   Container(
+                    padding: EdgeInsets.only(left: 15),
                     width: MediaQuery.of(context).size.width * 0.6,
-                    child: Text(task.lastDone != null ? bloc.leftDays(task) : 'Pendente'),
+                    child: Text(
+                      task.lastDone != null ? bloc.leftDays(task) : 'Pendente'
+                    ),
                   ),
                   Expanded(
                     child: Container(
@@ -68,5 +80,14 @@ class TaskCardComponent extends StatelessWidget {
         )
       ),
     );
+  }
+
+  Color _sideBorderColor(Task task) {
+    int daysRemaining = bloc.daysRemaining(task);
+    if (task.lastDone != null) {
+      return daysRemaining < 0 ? Colors.red : daysRemaining > 0 ? Colors.green : Colors.amber;
+    }
+
+    return Colors.blue;
   }
 }
